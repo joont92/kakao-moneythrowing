@@ -1,0 +1,80 @@
+openapi: "3.0"
+info:
+  version: 1.0.0
+  title: kakao-moneythrowing API documentation
+  contact:
+    name: Junyoung Park
+    email: pk920207@gmail.com
+
+paths:
+  /throwing:
+    post:
+      summary: 뿌리기 생성
+      operationId: createThrowing
+      tags:
+      - Throwing
+      parameters:
+      - name: X-USER-ID
+        in: header
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: X-ROOM-ID
+        in: header
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateThrowingRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ThrowingCreated'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+
+components:
+  headers:
+    UserId:
+      name: X-USER-ID
+      in: header
+      schema:
+        type: string
+        format: uuid
+      required: true
+    RoomId:
+      name: X-ROOM-ID
+      in: header
+      schema:
+        type: string
+        format: uuid
+      required: true
+  schemas:
+    CreateThrowingRequest:
+      type: object
+      properties:
+        moneyAmount:
+          type: integer
+        peopleCount:
+          type: integer
+    ThrowingToken:
+      type: object
+      properties:
+        token:
+          type: string
+  responses:
+    ThrowingCreated:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThrowingToken'
