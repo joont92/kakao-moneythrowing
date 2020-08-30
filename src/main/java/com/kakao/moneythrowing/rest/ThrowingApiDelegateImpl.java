@@ -5,9 +5,8 @@ import com.kakao.moneythrowing.application.throwing.command.CreateThrowingComman
 import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.user.UserId;
-import com.kakao.moneythrowing.web.api.ThrowingApiDelegate;
-import com.kakao.moneythrowing.web.api.model.CreateThrowingRequest;
-import com.kakao.moneythrowing.web.api.model.ThrowingToken;
+import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
+import com.kakao.moneythrowing.rest.model.ThrowingToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
