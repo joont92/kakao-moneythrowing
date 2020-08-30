@@ -1,31 +1,42 @@
 package com.kakao.moneythrowing.domain.model.throwing;
 
 import com.kakao.moneythrowing.domain.model.Entity;
+import com.kakao.moneythrowing.domain.model.common.Token;
+import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.user.UserId;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Table(name = "throwing")
 public class Throwing extends Entity {
-    private String token;
+    @Embedded
+    private Token token;
+
+    @Embedded
     private UserId userId;
+
+    @Embedded
     private RoomId roomId;
+
+    @Column(name = "end_date")
     private Instant endDate;
+
+    @OneToMany(mappedBy = "throwing", cascade = CascadeType.PERSIST)
     private Set<ThrowingThread> threads = new HashSet<>();
 
-    public Throwing(UserId userId, RoomId roomId, Integer moneyAmount, Integer peopleCount) {
+    public Throwing(UserId userId, RoomId roomId,
+                    Integer moneyAmount, Integer peopleCount, TokenGenerator tokenGenerator) {
         if(moneyAmount < peopleCount) {
             throw new IllegalArgumentException();
         }
 
+        this.token = tokenGenerator.generateUnusedToken(getClass());
         this.userId = userId;
         this.roomId = roomId;
         this.endDate = Instant.now().plus(10, ChronoUnit.MINUTES);

@@ -1,5 +1,7 @@
 package com.kakao.moneythrowing.domain.model.throwing;
 
+import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
+import com.kakao.moneythrowing.mock.MockTokenRepository;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.user.UserId;
 import org.junit.Test;
@@ -9,12 +11,14 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThrowingTest {
+    private final TokenGenerator tokenGenerator = new TokenGenerator(new MockTokenRepository());
+
     @Test
     public void 뿌리기_할_금액을_전달받을_인원수대로_분배한다() {
         UserId userId = new UserId(UUID.randomUUID());
         RoomId roomId = new RoomId(UUID.randomUUID());
 
-        Throwing throwing = new Throwing(userId, roomId, 1000, 3);
+        Throwing throwing = new Throwing(userId, roomId, 1000, 3, tokenGenerator);
         assertThat(throwing.getThreads()).hasSize(3);
     }
 
@@ -23,7 +27,7 @@ public class ThrowingTest {
         UserId userId = new UserId(UUID.randomUUID());
         RoomId roomId = new RoomId(UUID.randomUUID());
 
-        new Throwing(userId, roomId, 2, 3);
+        new Throwing(userId, roomId, 2, 3, tokenGenerator);
     }
 
     @Test
@@ -33,7 +37,7 @@ public class ThrowingTest {
         Integer moneyAmount = 1000;
         Integer peopleCount = 3;
 
-        Throwing throwing = new Throwing(userId, roomId, moneyAmount, peopleCount);
+        Throwing throwing = new Throwing(userId, roomId, moneyAmount, peopleCount, tokenGenerator);
 
         int sum = 0;
         for (ThrowingThread thread : throwing.getThreads()) {
