@@ -16,9 +16,9 @@ repositories {
 openApiGenerate {
     generatorName = "spring"
     inputSpec = "${rootDir}/src/main/resources/swagger/api.yml".toString()
-    outputDir = "${buildDir}/openapi".toString()
-    apiPackage = "com.kakao.moneythrowing.web.api"
-    modelPackage = "com.kakao.moneythrowing.web.api.model"
+    outputDir = "${rootDir}/generated".toString()
+    apiPackage = "com.kakao.moneythrowing.rest"
+    modelPackage = "com.kakao.moneythrowing.rest.model"
     configOptions = [
             useTags: "true",
             delegatePattern: "true",
@@ -33,7 +33,7 @@ compileJava.dependsOn("openApiGenerate")
 sourceSets {
     main {
         java {
-            srcDir file("${buildDir}/openapi/src/main/java")
+            srcDir file("${rootDir}/generated/src/main/java")
         }
     }
 }
