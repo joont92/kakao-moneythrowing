@@ -22,11 +22,22 @@ public abstract class AcceptanceTest {
     protected Gson gson;
 
     protected MockHttpServletRequestBuilder post(String url) {
-        return post(url, UUID.randomUUID(), UUID.randomUUID());
+        return post(url, null);
     }
 
-    protected MockHttpServletRequestBuilder post(String url, UUID userId, UUID roomId) {
-        return MockMvcRequestBuilders.post(url)
+    protected MockHttpServletRequestBuilder post(String url, Object... uriVars) {
+        return MockMvcRequestBuilders.post(url, uriVars)
+                .contentType("application/json")
+                .header("X-USER-ID", UUID.randomUUID())
+                .header("X-ROOM-ID", UUID.randomUUID());
+    }
+
+    protected MockHttpServletRequestBuilder put(String url, Object... uriVars) {
+        return put(url, UUID.randomUUID(), UUID.randomUUID(), uriVars);
+    }
+
+    protected MockHttpServletRequestBuilder put(String url, UUID userId, UUID roomId, Object... uriVars) {
+        return MockMvcRequestBuilders.put(url, uriVars)
                 .contentType("application/json")
                 .header("X-USER-ID", userId)
                 .header("X-ROOM-ID", roomId);

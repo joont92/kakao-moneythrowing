@@ -33,31 +33,38 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateThrowingRequest'
       responses:
-        '200':
+        '201':
           $ref: '#/components/responses/ThrowingCreated'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
+
+  /throwing/{token}/receive:
+    put:
+      summary: 뿌린 금액 받기
+      operationId: receiveThrowing
+      tags:
+      - Throwing
+      parameters:
+      - name: X-USER-ID
+        in: header
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: X-ROOM-ID
+        in: header
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - name: token
+        in: path
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ThrowingReceived'
 
 components:
-  headers:
-    UserId:
-      name: X-USER-ID
-      in: header
-      schema:
-        type: string
-        format: uuid
-      required: true
-    RoomId:
-      name: X-ROOM-ID
-      in: header
-      schema:
-        type: string
-        format: uuid
-      required: true
   schemas:
     CreateThrowingRequest:
       type: object
@@ -71,8 +78,20 @@ components:
       properties:
         token:
           type: string
+    ThrowingAmount:
+      type: object
+      properties:
+        amount:
+          type: integer
+
   responses:
     ThrowingCreated:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThrowingToken'
+    ThrowingReceived:
       description: OK
       content:
         application/json:
