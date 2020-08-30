@@ -15,8 +15,8 @@ public class ThrowingTest {
 
     @Test
     public void 뿌리기_할_금액을_전달받을_인원수대로_분배한다() {
-        UserId userId = new UserId(UUID.randomUUID());
-        RoomId roomId = new RoomId(UUID.randomUUID());
+        UserId userId = UserId.create(UUID.randomUUID());
+        RoomId roomId = RoomId.create(UUID.randomUUID());
 
         Throwing throwing = new Throwing(userId, roomId, 1000, 3, tokenGenerator);
         assertThat(throwing.getThreads()).hasSize(3);
@@ -24,16 +24,16 @@ public class ThrowingTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void 뿌리기_할_금액은_인원수보다_많아야한다() {
-        UserId userId = new UserId(UUID.randomUUID());
-        RoomId roomId = new RoomId(UUID.randomUUID());
+        UserId userId = UserId.create(UUID.randomUUID());
+        RoomId roomId = RoomId.create(UUID.randomUUID());
 
         new Throwing(userId, roomId, 2, 3, tokenGenerator);
     }
 
     @Test
     public void 나눈_금액은_전체에서_인원수를_뺀_금액보다_작아야_한다() {
-        UserId userId = new UserId(UUID.randomUUID());
-        RoomId roomId = new RoomId(UUID.randomUUID());
+        UserId userId = UserId.create(UUID.randomUUID());
+        RoomId roomId = RoomId.create(UUID.randomUUID());
         Integer moneyAmount = 1000;
         Integer peopleCount = 3;
 

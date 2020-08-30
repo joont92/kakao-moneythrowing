@@ -1,6 +1,6 @@
 package com.kakao.moneythrowing.domain.model.throwing;
 
-import com.kakao.moneythrowing.domain.model.Entity;
+import com.kakao.moneythrowing.domain.model.Identified;
 import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
@@ -13,8 +13,9 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+@Entity
 @Table(name = "throwing")
-public class Throwing extends Entity {
+public class Throwing extends Identified {
     @Embedded
     private Token token;
 
@@ -29,6 +30,8 @@ public class Throwing extends Entity {
 
     @OneToMany(mappedBy = "throwing", cascade = CascadeType.PERSIST)
     private Set<ThrowingThread> threads = new HashSet<>();
+
+    protected Throwing() {}
 
     public Throwing(UserId userId, RoomId roomId,
                     Integer moneyAmount, Integer peopleCount, TokenGenerator tokenGenerator) {

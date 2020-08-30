@@ -1,16 +1,24 @@
 package com.kakao.moneythrowing.domain.model.room;
 
+import javax.persistence.Embeddable;
 import java.util.UUID;
 
+@Embeddable
 public class RoomId {
-    private UUID id;
+    private UUID roomId;
 
-    public RoomId(UUID id) {
-        this.id = id;
+    protected RoomId() {}
+
+    private RoomId(UUID roomId) {
+        this.roomId = roomId;
     }
 
-    public RoomId(String id) {
-        this(UUID.fromString(id));
+    public static RoomId create(UUID roomId) {
+        return new RoomId(roomId);
+    }
+
+    public static RoomId create(String roomId) {
+        return new RoomId(UUID.fromString(roomId));
     }
 
     @Override
@@ -24,6 +32,6 @@ public class RoomId {
         }
 
         RoomId userId = (RoomId) obj;
-        return id.equals(userId.id);
+        return roomId.equals(userId.roomId);
     }
 }

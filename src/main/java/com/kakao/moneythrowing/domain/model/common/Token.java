@@ -1,10 +1,16 @@
 package com.kakao.moneythrowing.domain.model.common;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@Embeddable
 public class Token {
+    @Column(name = "token")
     private String token;
+
+    protected Token() {}
 
     private Token(String token) {
         this.token = token;
