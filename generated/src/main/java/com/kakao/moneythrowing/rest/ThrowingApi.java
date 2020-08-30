@@ -6,6 +6,7 @@
 package com.kakao.moneythrowing.rest;
 
 import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
+import com.kakao.moneythrowing.rest.model.ThrowingAmount;
 import com.kakao.moneythrowing.rest.model.ThrowingToken;
 import java.util.UUID;
 import io.swagger.annotations.*;
@@ -62,13 +63,13 @@ public interface ThrowingApi {
      * @param token  (required)
      * @return OK (status code 200)
      */
-    @ApiOperation(value = "뿌린 금액 받기", nickname = "receiveThrowing", notes = "", response = ThrowingToken.class, tags={ "Throwing", })
+    @ApiOperation(value = "뿌린 금액 받기", nickname = "receiveThrowing", notes = "", response = ThrowingAmount.class, tags={ "Throwing", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = ThrowingToken.class) })
+        @ApiResponse(code = 200, message = "OK", response = ThrowingAmount.class) })
     @RequestMapping(value = "/throwing/{token}/receive",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    default ResponseEntity<ThrowingToken> receiveThrowing(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-USER-ID", required=true) UUID X_USER_ID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-ROOM-ID", required=true) UUID X_ROOM_ID,@ApiParam(value = "",required=true) @PathVariable("token") String token) {
+    default ResponseEntity<ThrowingAmount> receiveThrowing(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-USER-ID", required=true) UUID X_USER_ID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-ROOM-ID", required=true) UUID X_ROOM_ID,@ApiParam(value = "",required=true) @PathVariable("token") String token) {
         return getDelegate().receiveThrowing(X_USER_ID, X_ROOM_ID, token);
     }
 

@@ -8,8 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CreateThrowingCommand {
-    private UserId userId;
-    private RoomId roomId;
     private Integer moneyAmount;
     private Integer peopleCount;
 }

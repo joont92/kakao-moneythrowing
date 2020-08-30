@@ -96,4 +96,4 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThrowingToken'
+            $ref: '#/components/schemas/ThrowingAmount'

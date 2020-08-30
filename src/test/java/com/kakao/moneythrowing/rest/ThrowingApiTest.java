@@ -32,8 +32,8 @@ public class ThrowingApiTest extends AcceptanceTest {
         mockMvc.perform(
                 post("/throwing")
                         .contentType("application/json")
-                        .header("X-USER-ID", UUID.randomUUID())
-                        .header("X-ROOM-ID", UUID.randomUUID())
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", RoomId.generate().getValue())
                         .content(gson.toJson(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.token").exists());
@@ -47,8 +47,8 @@ public class ThrowingApiTest extends AcceptanceTest {
         mockMvc.perform(
                 post("/throwing")
                         .contentType("application/json")
-                        .header("X-USER-ID", UUID.randomUUID())
-                        .header("X-ROOM-ID", UUID.randomUUID())
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", RoomId.generate().getValue())
                         .content(gson.toJson(request)))
                 .andExpect(status().isBadRequest());
     }
@@ -61,10 +61,10 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken())
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
                         .contentType("application/json")
-                        .header("X-USER-ID", UserId.generate())
-                        .header("X-ROOM-ID", roomId))
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.amount", Matchers.greaterThanOrEqualTo(1)))
                 .andExpect(jsonPath("$.amount", Matchers.lessThanOrEqualTo(998)));
@@ -78,10 +78,10 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken())
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
                         .contentType("application/json")
-                        .header("X-USER-ID", UserId.generate())
-                        .header("X-ROOM-ID", RoomId.generate()))
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", RoomId.generate().getValue()))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(
                 put("/throwing/{token}/receive", throwing.getToken())
@@ -100,16 +100,16 @@ public class ThrowingApiTest extends AcceptanceTest {
 
         UserId receiver = UserId.generate();
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken())
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
                         .contentType("application/json")
-                        .header("X-USER-ID", receiver)
-                        .header("X-ROOM-ID", roomId))
+                        .header("X-USER-ID", receiver.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isOk());
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken())
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
                         .contentType("application/json")
-                        .header("X-USER-ID", receiver)
-                        .header("X-ROOM-ID", roomId))
+                        .header("X-USER-ID", receiver.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isBadRequest());
     }
 

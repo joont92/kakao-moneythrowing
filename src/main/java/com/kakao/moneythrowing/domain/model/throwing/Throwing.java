@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -66,5 +67,14 @@ public class Throwing extends Identified {
 
     public Set<ThrowingThread> getThreads() {
         return threads;
+    }
+
+    public Optional<ThrowingThread> acquire(UserId userId) {
+        Optional<ThrowingThread> opt = this.threads.stream()
+                .filter(ThrowingThread::acquirable)
+                .findFirst();
+        opt.ifPresent(t -> t.acquire(userId));
+
+        return opt;
     }
 }

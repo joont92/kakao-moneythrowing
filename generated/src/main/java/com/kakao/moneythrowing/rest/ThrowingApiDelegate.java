@@ -1,6 +1,7 @@
 package com.kakao.moneythrowing.rest;
 
 import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
+import com.kakao.moneythrowing.rest.model.ThrowingAmount;
 import com.kakao.moneythrowing.rest.model.ThrowingToken;
 import java.util.UUID;
 import io.swagger.annotations.*;
@@ -59,13 +60,13 @@ public interface ThrowingApiDelegate {
      * @return OK (status code 200)
      * @see ThrowingApi#receiveThrowing
      */
-    default ResponseEntity<ThrowingToken> receiveThrowing(UUID X_USER_ID,
+    default ResponseEntity<ThrowingAmount> receiveThrowing(UUID X_USER_ID,
         UUID X_ROOM_ID,
         String token) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"token\" : \"token\" }";
+                    String exampleString = "{ \"amount\" : 0 }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
