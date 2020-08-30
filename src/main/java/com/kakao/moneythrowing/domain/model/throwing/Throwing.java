@@ -28,7 +28,8 @@ public class Throwing extends Identified {
     @Column(name = "end_date")
     private Instant endDate;
 
-    @OneToMany(mappedBy = "throwing", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "throwing_pk")
     private Set<ThrowingThread> threads = new HashSet<>();
 
     protected Throwing() {}
@@ -56,6 +57,10 @@ public class Throwing extends Identified {
             bound = bound - amount + 1;
         }
         this.threads.add(new ThrowingThread(bound + 1));
+    }
+
+    public Token getToken() {
+        return token;
     }
 
     public Set<ThrowingThread> getThreads() {

@@ -1,20 +1,27 @@
 package com.kakao.moneythrowing.rest;
 
 import com.kakao.moneythrowing.web.api.model.CreateThrowingRequest;
-import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.Test;
 
-public class ThrowingApiTest extends AcceptanceTest{
+import java.util.UUID;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+public class ThrowingApiTest extends AcceptanceTest {
     @Test
-    void 금액과_인원수를_전달받아_뿌리기를_생성한다() throws Exception {
+    public void 금액과_인원수를_전달받아_뿌리기를_생성한다() throws Exception {
         CreateThrowingRequest request = new CreateThrowingRequest()
                 .moneyAmount(1000)
                 .peopleCount(3);
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/throwing")
+                post("/throwing")
+                        .contentType("application/json")
+                        .header("X-USER-ID", UUID.randomUUID())
+                        .header("X-ROOM-ID", UUID.randomUUID())
                         .content(gson.toJson(request)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token").exists());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").exists());
     }
 }

@@ -10,9 +10,7 @@ public class ThrowingThread extends Identified {
     @Column(name = "amount")
     private Integer amount;
 
-    @ManyToOne
-    @JoinColumn(name = "throwing_pk")
-    private Throwing throwing;
+    protected ThrowingThread() {}
 
     public ThrowingThread(Integer amount) {
         this.amount = amount;
