@@ -36,4 +36,8 @@ public class ThrowingThread extends Identified {
     public boolean acquirable() {
         return userId == null;
     }
+
+    public UserId getUserId() {
+        return userId;
+    }
 }

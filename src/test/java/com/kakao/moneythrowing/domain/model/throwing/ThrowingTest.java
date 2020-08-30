@@ -46,13 +46,30 @@ public class ThrowingTest {
     }
 
     @Test
-    public void 분배한_뿌리기에서_랜덤으로_1건을_반환한다() {
+    public void 분배한_뿌리기에서_랜덤으로_1건을_획득한다() {
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(
+                UserId.generate(), roomId, 1000, 3, tokenGenerator);
+
+        assertThat(throwing.acquire(UserId.generate(), roomId)).isNotEmpty();
+        assertThat(throwing.acquire(UserId.generate(), roomId)).isNotEmpty();
+        assertThat(throwing.acquire(UserId.generate(), roomId)).isNotEmpty();
+        assertThat(throwing.acquire(UserId.generate(), roomId)).isEmpty();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void 뿌리기가_생성된_방과_다를_경우_획득할_수_없다() {
         Throwing throwing = new Throwing(
                 UserId.generate(), RoomId.generate(), 1000, 3, tokenGenerator);
+        throwing.acquire(UserId.generate(), RoomId.generate());
+    }
 
-        assertThat(throwing.acquire(UserId.generate())).isNotEmpty();
-        assertThat(throwing.acquire(UserId.generate())).isNotEmpty();
-        assertThat(throwing.acquire(UserId.generate())).isNotEmpty();
-        assertThat(throwing.acquire(UserId.generate())).isEmpty();
+    @Test(expected = IllegalArgumentException.class)
+    public void 뿌린_당사자는_획득할_수_없다() {
+        UserId generator = UserId.generate();
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(
+                generator, roomId, 1000, 3, tokenGenerator);
+        throwing.acquire(generator, roomId);
     }
 }

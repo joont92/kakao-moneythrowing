@@ -38,6 +38,12 @@ public class Throwing extends Identified {
 
     public Throwing(UserId userId, RoomId roomId,
                     Integer moneyAmount, Integer peopleCount, TokenGenerator tokenGenerator) {
+        this(userId, roomId, moneyAmount, peopleCount,
+                Instant.now().plus(10, ChronoUnit.MINUTES), tokenGenerator);
+    }
+
+    public Throwing(UserId userId, RoomId roomId,
+                    Integer moneyAmount, Integer peopleCount, Instant endDate, TokenGenerator tokenGenerator) {
         if(moneyAmount < peopleCount) {
             throw new IllegalArgumentException();
         }
@@ -45,7 +51,7 @@ public class Throwing extends Identified {
         this.token = tokenGenerator.generateUnusedToken(getClass());
         this.userId = userId;
         this.roomId = roomId;
-        this.endDate = Instant.now().plus(10, ChronoUnit.MINUTES);
+        this.endDate = endDate;
         divideAmountRandomly(moneyAmount, peopleCount);
     }
 
@@ -69,7 +75,21 @@ public class Throwing extends Identified {
         return threads;
     }
 
-    public Optional<ThrowingThread> acquire(UserId userId) {
+    public Optional<ThrowingThread> acquire(UserId userId, RoomId roomId) {
+        if(Instant.now().isAfter(endDate)) {
+            throw new IllegalArgumentException();
+        }
+        if(!this.roomId.equals(roomId)) {
+            throw new IllegalArgumentException();
+        }
+        if(this.userId.equals(userId)) {
+            throw new IllegalArgumentException();
+        }
+        if(this.threads.stream()
+                .filter(t -> !t.acquirable()).map(ThrowingThread::getUserId).anyMatch(u -> u.equals(userId))) {
+            throw new IllegalArgumentException();
+        }
+
         Optional<ThrowingThread> opt = this.threads.stream()
                 .filter(ThrowingThread::acquirable)
                 .findFirst();

@@ -11,7 +11,8 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.UUID;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -92,6 +93,26 @@ public class ThrowingApiTest extends AcceptanceTest {
     }
 
     @Test
+    public void 이미_다_받아갔을_경우_더_이상_받을_수_없다() throws Exception{
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(UserId.generate(), roomId, 1000, 1, tokenGenerator);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                        .contentType("application/json")
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isOk());
+        mockMvc.perform(
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                        .contentType("application/json")
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void 뿌려진_금액은_한번만_받을_수_있다() throws Exception{
         RoomId roomId = RoomId.generate();
         Throwing throwing = new Throwing(
@@ -113,4 +134,18 @@ public class ThrowingApiTest extends AcceptanceTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void 뿌린지_10분이_지났을_경우_받을_수_없다() throws Exception {
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(UserId.generate(), roomId, 1000, 3,
+                Instant.now().minus(11, ChronoUnit.MINUTES), tokenGenerator);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                        .contentType("application/json")
+                        .header("X-USER-ID", UserId.generate().getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isBadRequest());
+    }
 }

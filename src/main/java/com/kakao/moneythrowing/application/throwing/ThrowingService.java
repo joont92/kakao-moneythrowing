@@ -33,7 +33,7 @@ public class ThrowingService {
     public Integer receiveThrowing(UserAndRoomCommand userAndRoomCommand, Token token) {
         Throwing throwing = throwingRepository.findByToken(token);
 
-        return throwing.acquire(userAndRoomCommand.getUserId())
+        return throwing.acquire(userAndRoomCommand.getUserId(), userAndRoomCommand.getRoomId())
                 .orElseThrow(EntityNotFoundException::new)
                 .getAmount();
     }

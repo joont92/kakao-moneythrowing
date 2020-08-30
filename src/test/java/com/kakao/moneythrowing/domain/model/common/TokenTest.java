@@ -17,7 +17,9 @@ public class TokenTest {
 
     @Test
     public void 랜덤한_세글자의_토큰을_생성한다() {
-        assertThat(Token.generateToken().getValue()).isBetween("000", "ZZZ");
-        assertThat(Token.generateToken().getValue()).isBetween("000", "ZZZ");
+        assertThat(Token.generateToken().getValue()).satisfiesAnyOf(
+                v -> assertThat(v).isGreaterThanOrEqualTo("000").isLessThanOrEqualTo("999"),
+                v -> assertThat(v).isGreaterThanOrEqualTo("AAA").isLessThanOrEqualTo("ZZZ"),
+                v -> assertThat(v).isGreaterThanOrEqualTo("aaa").isLessThanOrEqualTo("zzz"));
     }
 }
