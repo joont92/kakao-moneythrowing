@@ -1,7 +1,7 @@
 package com.kakao.moneythrowing.domain.model.throwing;
 
 import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
-import com.kakao.moneythrowing.mock.MockTokenRepository;
+import com.kakao.moneythrowing.support.mock.MockTokenRepository;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.user.UserId;
 import org.junit.Test;

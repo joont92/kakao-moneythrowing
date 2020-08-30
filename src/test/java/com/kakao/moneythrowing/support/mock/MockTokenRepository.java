@@ -1,4 +1,4 @@
-package com.kakao.moneythrowing.mock;
+package com.kakao.moneythrowing.support.mock;
 
 import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.common.TokenRepository;

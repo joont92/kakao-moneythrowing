@@ -9,6 +9,7 @@ import com.kakao.moneythrowing.web.api.ThrowingApiDelegate;
 import com.kakao.moneythrowing.web.api.model.CreateThrowingRequest;
 import com.kakao.moneythrowing.web.api.model.ThrowingToken;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -25,6 +26,6 @@ public class ThrowingApiDelegateImpl implements ThrowingApiDelegate {
                         UserId.create(X_USER_ID), RoomId.create(X_ROOM_ID),
                         createThrowingRequest.getMoneyAmount(), createThrowingRequest.getPeopleCount()));
 
-        return ResponseEntity.ok(new ThrowingToken().token(token.getValue()));
+        return new ResponseEntity<>(new ThrowingToken().token(token.getValue()), HttpStatus.CREATED);
     }
 }

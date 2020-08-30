@@ -1,11 +1,9 @@
 package com.kakao.moneythrowing.rest;
 
+import com.kakao.moneythrowing.support.AcceptanceTest;
 import com.kakao.moneythrowing.web.api.model.CreateThrowingRequest;
 import org.junit.Test;
 
-import java.util.UUID;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,13 +13,17 @@ public class ThrowingApiTest extends AcceptanceTest {
         CreateThrowingRequest request = new CreateThrowingRequest()
                 .moneyAmount(1000)
                 .peopleCount(3);
-        mockMvc.perform(
-                post("/throwing")
-                        .contentType("application/json")
-                        .header("X-USER-ID", UUID.randomUUID())
-                        .header("X-ROOM-ID", UUID.randomUUID())
-                        .content(gson.toJson(request)))
-                .andExpect(status().isOk())
+        mockMvc.perform(post("/throwing").content(gson.toJson(request)))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.token").exists());
+    }
+
+    @Test
+    public void 인원수보다_돈을_작게_뿌릴수_없다() throws Exception {
+        CreateThrowingRequest request = new CreateThrowingRequest()
+                .moneyAmount(2)
+                .peopleCount(3);
+        mockMvc.perform(post("/throwing").content(gson.toJson(request)))
+                .andExpect(status().isBadRequest());
     }
 }
