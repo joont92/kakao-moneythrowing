@@ -10,31 +10,31 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * ThrowingToken
+ * AmountApiModel
  */
 
-public class ThrowingToken   {
-  @JsonProperty("token")
-  private String token;
+public class AmountApiModel   {
+  @JsonProperty("amount")
+  private Integer amount;
 
-  public ThrowingToken token(String token) {
-    this.token = token;
+  public AmountApiModel amount(Integer amount) {
+    this.amount = amount;
     return this;
   }
 
   /**
-   * Get token
-   * @return token
+   * Get amount
+   * @return amount
   */
   @ApiModelProperty(value = "")
 
 
-  public String getToken() {
-    return token;
+  public Integer getAmount() {
+    return amount;
   }
 
-  public void setToken(String token) {
-    this.token = token;
+  public void setAmount(Integer amount) {
+    this.amount = amount;
   }
 
 
@@ -46,21 +46,21 @@ public class ThrowingToken   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ThrowingToken throwingToken = (ThrowingToken) o;
-    return Objects.equals(this.token, throwingToken.token);
+    AmountApiModel amount = (AmountApiModel) o;
+    return Objects.equals(this.amount, amount.amount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(token);
+    return Objects.hash(amount);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ThrowingToken {\n");
+    sb.append("class AmountApiModel {\n");
     
-    sb.append("    token: ").append(toIndentedString(token)).append("\n");
+    sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
     sb.append("}");
     return sb.toString();
   }

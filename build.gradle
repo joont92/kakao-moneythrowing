@@ -19,6 +19,7 @@ openApiGenerate {
     outputDir = "${rootDir}/generated".toString()
     apiPackage = "com.kakao.moneythrowing.rest"
     modelPackage = "com.kakao.moneythrowing.rest.model"
+    modelNameSuffix = "ApiModel"
     configOptions = [
             useTags: "true",
             delegatePattern: "true",

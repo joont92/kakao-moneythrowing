@@ -5,7 +5,7 @@ import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.throwing.Throwing;
 import com.kakao.moneythrowing.domain.model.throwing.ThrowingRepository;
 import com.kakao.moneythrowing.domain.model.user.UserId;
-import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
+import com.kakao.moneythrowing.rest.model.CreateThrowingRequestApiModel;
 import com.kakao.moneythrowing.support.AcceptanceTest;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class ThrowingApiTest extends AcceptanceTest {
 
     @Test
     public void 금액과_인원수를_전달받아_뿌리기를_생성한다() throws Exception {
-        CreateThrowingRequest request = new CreateThrowingRequest()
+        CreateThrowingRequestApiModel request = new CreateThrowingRequestApiModel()
                 .moneyAmount(1000)
                 .peopleCount(3);
         mockMvc.perform(
@@ -42,7 +42,7 @@ public class ThrowingApiTest extends AcceptanceTest {
 
     @Test
     public void 인원수보다_돈을_작게_뿌릴수_없다() throws Exception {
-        CreateThrowingRequest request = new CreateThrowingRequest()
+        CreateThrowingRequestApiModel request = new CreateThrowingRequestApiModel()
                 .moneyAmount(2)
                 .peopleCount(3);
         mockMvc.perform(

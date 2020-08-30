@@ -1,8 +1,9 @@
 package com.kakao.moneythrowing.rest;
 
-import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
-import com.kakao.moneythrowing.rest.model.ThrowingAmount;
-import com.kakao.moneythrowing.rest.model.ThrowingToken;
+import com.kakao.moneythrowing.rest.model.AmountApiModel;
+import com.kakao.moneythrowing.rest.model.CreateThrowingRequestApiModel;
+import com.kakao.moneythrowing.rest.model.ThrowingApiModel;
+import com.kakao.moneythrowing.rest.model.TokenApiModel;
 import java.util.UUID;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -31,17 +32,42 @@ public interface ThrowingApiDelegate {
      *
      * @param X_USER_ID  (required)
      * @param X_ROOM_ID  (required)
-     * @param createThrowingRequest  (required)
+     * @param createThrowingRequestApiModel  (required)
      * @return OK (status code 201)
      * @see ThrowingApi#createThrowing
      */
-    default ResponseEntity<ThrowingToken> createThrowing(UUID X_USER_ID,
+    default ResponseEntity<TokenApiModel> createThrowing(UUID X_USER_ID,
         UUID X_ROOM_ID,
-        CreateThrowingRequest createThrowingRequest) {
+        CreateThrowingRequestApiModel createThrowingRequestApiModel) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"token\" : \"token\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+    /**
+     * GET /throwing/{token} : 뿌리기 조회
+     *
+     * @param X_USER_ID  (required)
+     * @param X_ROOM_ID  (required)
+     * @param token  (required)
+     * @return OK (status code 200)
+     * @see ThrowingApi#getThrowing
+     */
+    default ResponseEntity<ThrowingApiModel> getThrowing(UUID X_USER_ID,
+        UUID X_ROOM_ID,
+        String token) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"receivedUser\" : [ { \"amount\" : 5, \"acquirer\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" }, { \"amount\" : 5, \"acquirer\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\" } ], \"time\" : { \"start\" : \"2000-01-23T04:56:07.000+00:00\", \"end\" : \"2000-01-23T04:56:07.000+00:00\" }, \"amountStatus\" : { \"total\" : 0, \"remain\" : 1, \"completed\" : 6 } }";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
@@ -60,7 +86,7 @@ public interface ThrowingApiDelegate {
      * @return OK (status code 200)
      * @see ThrowingApi#receiveThrowing
      */
-    default ResponseEntity<ThrowingAmount> receiveThrowing(UUID X_USER_ID,
+    default ResponseEntity<AmountApiModel> receiveThrowing(UUID X_USER_ID,
         UUID X_ROOM_ID,
         String token) {
         getRequest().ifPresent(request -> {

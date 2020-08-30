@@ -4,9 +4,9 @@ import com.kakao.moneythrowing.application.throwing.ThrowingService;
 import com.kakao.moneythrowing.application.throwing.command.CreateThrowingCommand;
 import com.kakao.moneythrowing.application.throwing.command.UserAndRoomCommand;
 import com.kakao.moneythrowing.domain.model.common.Token;
-import com.kakao.moneythrowing.rest.model.CreateThrowingRequest;
-import com.kakao.moneythrowing.rest.model.ThrowingAmount;
-import com.kakao.moneythrowing.rest.model.ThrowingToken;
+import com.kakao.moneythrowing.rest.model.AmountApiModel;
+import com.kakao.moneythrowing.rest.model.CreateThrowingRequestApiModel;
+import com.kakao.moneythrowing.rest.model.TokenApiModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +20,22 @@ public class ThrowingApiDelegateImpl implements ThrowingApiDelegate {
     private final ThrowingService throwingService;
 
     @Override
-    public ResponseEntity<ThrowingToken> createThrowing(UUID X_USER_ID, UUID X_ROOM_ID, CreateThrowingRequest createThrowingRequest) {
+    public ResponseEntity<TokenApiModel> createThrowing(UUID X_USER_ID, UUID X_ROOM_ID, CreateThrowingRequestApiModel body) {
         Token token = throwingService.createThrowing(
                 new UserAndRoomCommand(X_USER_ID, X_ROOM_ID),
                 new CreateThrowingCommand(
-                        createThrowingRequest.getMoneyAmount(), createThrowingRequest.getPeopleCount()));
+                        body.getMoneyAmount(), body.getPeopleCount()));
 
-        return new ResponseEntity<>(new ThrowingToken().token(token.getValue()), HttpStatus.CREATED);
+        return new ResponseEntity<>(new TokenApiModel().token(token.getValue()), HttpStatus.CREATED);
     }
 
+
+
     @Override
-    public ResponseEntity<ThrowingAmount> receiveThrowing(UUID X_USER_ID, UUID X_ROOM_ID, String token) {
+    public ResponseEntity<AmountApiModel> receiveThrowing(UUID X_USER_ID, UUID X_ROOM_ID, String token) {
         Integer amount = throwingService.receiveThrowing(
                 new UserAndRoomCommand(X_USER_ID, X_ROOM_ID),
                 Token.createToken(token));
-        return ResponseEntity.ok(new ThrowingAmount().amount(amount));
+        return ResponseEntity.ok(new AmountApiModel().amount(amount));
     }
 }

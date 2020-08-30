@@ -14,18 +14,8 @@ paths:
       tags:
       - Throwing
       parameters:
-      - name: X-USER-ID
-        in: header
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - name: X-ROOM-ID
-        in: header
-        schema:
-          type: string
-          format: uuid
-        required: true
+      - $ref: '#/components/parameters/UserIdHeader'
+      - $ref: '#/components/parameters/RoomIdHeader'
       requestBody:
         required: true
         content:
@@ -34,7 +24,29 @@ paths:
               $ref: '#/components/schemas/CreateThrowingRequest'
       responses:
         '201':
-          $ref: '#/components/responses/ThrowingCreated'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+
+  /throwing/{token}:
+    get:
+      summary: 뿌리기 조회
+      operationId: getThrowing
+      tags:
+        - Throwing
+      parameters:
+      - $ref: '#/components/parameters/UserIdHeader'
+      - $ref: '#/components/parameters/RoomIdHeader'
+      - $ref: '#/components/parameters/TokenPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Throwing'
 
   /throwing/{token}/receive:
     put:
@@ -43,28 +55,40 @@ paths:
       tags:
       - Throwing
       parameters:
-      - name: X-USER-ID
-        in: header
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - name: X-ROOM-ID
-        in: header
-        schema:
-          type: string
-          format: uuid
-        required: true
-      - name: token
-        in: path
-        schema:
-          type: string
-        required: true
+      - $ref: '#/components/parameters/UserIdHeader'
+      - $ref: '#/components/parameters/RoomIdHeader'
+      - $ref: '#/components/parameters/TokenPath'
       responses:
         '200':
-          $ref: '#/components/responses/ThrowingReceived'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Amount'
 
 components:
+  parameters:
+    UserIdHeader:
+      in: header
+      name: X-USER-ID
+      schema:
+        type: string
+        format: uuid
+      required: true
+    RoomIdHeader:
+      in: header
+      name: X-ROOM-ID
+      schema:
+        type: string
+        format: uuid
+      required: true
+    TokenPath:
+      in: path
+      name: token
+      schema:
+        type: string
+      required: true
+
   schemas:
     CreateThrowingRequest:
       type: object
@@ -73,27 +97,51 @@ components:
           type: integer
         peopleCount:
           type: integer
-    ThrowingToken:
+
+    Throwing:
+      type: object
+      properties:
+        time:
+          $ref: '#/components/schemas/ThrowingTime'
+        amountStatus:
+          $ref: '#/components/schemas/ThrowingAmountStatus'
+        receivedUser:
+          type: array
+          items:
+            $ref: '#/components/schemas/Receiving'
+    ThrowingAmountStatus:
+      type: object
+      properties:
+        total:
+          type: integer
+        completed:
+          type: integer
+        remain:
+          type: integer
+    ThrowingTime:
+      type: object
+      properties:
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    Receiving:
+      type: object
+      properties:
+        acquirer:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+    Token:
       type: object
       properties:
         token:
           type: string
-    ThrowingAmount:
+    Amount:
       type: object
       properties:
         amount:
           type: integer
-
-  responses:
-    ThrowingCreated:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ThrowingToken'
-    ThrowingReceived:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ThrowingAmount'

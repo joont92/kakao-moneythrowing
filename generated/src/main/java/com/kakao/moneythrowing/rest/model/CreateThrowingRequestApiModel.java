@@ -10,17 +10,17 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * CreateThrowingRequest
+ * CreateThrowingRequestApiModel
  */
 
-public class CreateThrowingRequest   {
+public class CreateThrowingRequestApiModel   {
   @JsonProperty("moneyAmount")
   private Integer moneyAmount;
 
   @JsonProperty("peopleCount")
   private Integer peopleCount;
 
-  public CreateThrowingRequest moneyAmount(Integer moneyAmount) {
+  public CreateThrowingRequestApiModel moneyAmount(Integer moneyAmount) {
     this.moneyAmount = moneyAmount;
     return this;
   }
@@ -40,7 +40,7 @@ public class CreateThrowingRequest   {
     this.moneyAmount = moneyAmount;
   }
 
-  public CreateThrowingRequest peopleCount(Integer peopleCount) {
+  public CreateThrowingRequestApiModel peopleCount(Integer peopleCount) {
     this.peopleCount = peopleCount;
     return this;
   }
@@ -69,7 +69,7 @@ public class CreateThrowingRequest   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateThrowingRequest createThrowingRequest = (CreateThrowingRequest) o;
+    CreateThrowingRequestApiModel createThrowingRequest = (CreateThrowingRequestApiModel) o;
     return Objects.equals(this.moneyAmount, createThrowingRequest.moneyAmount) &&
         Objects.equals(this.peopleCount, createThrowingRequest.peopleCount);
   }
@@ -82,7 +82,7 @@ public class CreateThrowingRequest   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateThrowingRequest {\n");
+    sb.append("class CreateThrowingRequestApiModel {\n");
     
     sb.append("    moneyAmount: ").append(toIndentedString(moneyAmount)).append("\n");
     sb.append("    peopleCount: ").append(toIndentedString(peopleCount)).append("\n");
