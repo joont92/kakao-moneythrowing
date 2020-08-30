@@ -1,5 +1,6 @@
 package com.kakao.moneythrowing.domain.model.room;
 
+import com.kakao.moneythrowing.domain.model.user.UserId;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -16,5 +17,11 @@ public class RoomIdTest {
     @Test(expected = IllegalArgumentException.class)
     public void UUID_포멧이_아닐경우_예외가_발생한다() {
         RoomId.create("not-uuid");
+    }
+
+    @Test
+    public void 랜덤한_UUID_형태의_RoomId를_생성한다() {
+        RoomId roomId = RoomId.generate();
+        assertThat(roomId.getValue()).isNotNull();
     }
 }

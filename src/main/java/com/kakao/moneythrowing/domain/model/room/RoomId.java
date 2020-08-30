@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class RoomId {
+    @Column(name = "room_id")
     private UUID roomId;
 
     private RoomId(UUID roomId) {
@@ -23,5 +25,13 @@ public class RoomId {
 
     public static RoomId create(String roomId) {
         return new RoomId(UUID.fromString(roomId));
+    }
+
+    public static RoomId generate() {
+        return new RoomId(UUID.randomUUID());
+    }
+
+    public UUID getValue() {
+        return roomId;
     }
 }

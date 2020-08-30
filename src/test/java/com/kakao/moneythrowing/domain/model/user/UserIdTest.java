@@ -17,4 +17,10 @@ public class UserIdTest {
     public void UUID_포멧이_아닐경우_예외가_발생한다() {
         UserId.create("not-uuid");
     }
+
+    @Test
+    public void 랜덤한_UUID_형태의_UserId를_생성한다() {
+        UserId userId = UserId.generate();
+        assertThat(userId.getValue()).isNotNull();
+    }
 }
