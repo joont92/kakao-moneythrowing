@@ -3,7 +3,7 @@ package com.kakao.moneythrowing.rest.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.kakao.moneythrowing.rest.model.ReceivingApiModel;
+import com.kakao.moneythrowing.rest.model.ReceiverApiModel;
 import com.kakao.moneythrowing.rest.model.ThrowingAmountStatusApiModel;
 import com.kakao.moneythrowing.rest.model.ThrowingTimeApiModel;
 import io.swagger.annotations.ApiModel;
@@ -25,9 +25,9 @@ public class ThrowingApiModel   {
   @JsonProperty("amountStatus")
   private ThrowingAmountStatusApiModel amountStatus;
 
-  @JsonProperty("receivedUser")
+  @JsonProperty("receivers")
   @Valid
-  private List<ReceivingApiModel> receivedUser = null;
+  private List<ReceiverApiModel> receivers = null;
 
   public ThrowingApiModel time(ThrowingTimeApiModel time) {
     this.time = time;
@@ -71,33 +71,33 @@ public class ThrowingApiModel   {
     this.amountStatus = amountStatus;
   }
 
-  public ThrowingApiModel receivedUser(List<ReceivingApiModel> receivedUser) {
-    this.receivedUser = receivedUser;
+  public ThrowingApiModel receivers(List<ReceiverApiModel> receivers) {
+    this.receivers = receivers;
     return this;
   }
 
-  public ThrowingApiModel addReceivedUserItem(ReceivingApiModel receivedUserItem) {
-    if (this.receivedUser == null) {
-      this.receivedUser = new ArrayList<>();
+  public ThrowingApiModel addReceiversItem(ReceiverApiModel receiversItem) {
+    if (this.receivers == null) {
+      this.receivers = new ArrayList<>();
     }
-    this.receivedUser.add(receivedUserItem);
+    this.receivers.add(receiversItem);
     return this;
   }
 
   /**
-   * Get receivedUser
-   * @return receivedUser
+   * Get receivers
+   * @return receivers
   */
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public List<ReceivingApiModel> getReceivedUser() {
-    return receivedUser;
+  public List<ReceiverApiModel> getReceivers() {
+    return receivers;
   }
 
-  public void setReceivedUser(List<ReceivingApiModel> receivedUser) {
-    this.receivedUser = receivedUser;
+  public void setReceivers(List<ReceiverApiModel> receivers) {
+    this.receivers = receivers;
   }
 
 
@@ -112,12 +112,12 @@ public class ThrowingApiModel   {
     ThrowingApiModel throwing = (ThrowingApiModel) o;
     return Objects.equals(this.time, throwing.time) &&
         Objects.equals(this.amountStatus, throwing.amountStatus) &&
-        Objects.equals(this.receivedUser, throwing.receivedUser);
+        Objects.equals(this.receivers, throwing.receivers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(time, amountStatus, receivedUser);
+    return Objects.hash(time, amountStatus, receivers);
   }
 
   @Override
@@ -127,7 +127,7 @@ public class ThrowingApiModel   {
     
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("    amountStatus: ").append(toIndentedString(amountStatus)).append("\n");
-    sb.append("    receivedUser: ").append(toIndentedString(receivedUser)).append("\n");
+    sb.append("    receivers: ").append(toIndentedString(receivers)).append("\n");
     sb.append("}");
     return sb.toString();
   }

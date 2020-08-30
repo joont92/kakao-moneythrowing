@@ -11,38 +11,38 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * ReceivingApiModel
+ * ReceiverApiModel
  */
 
-public class ReceivingApiModel   {
-  @JsonProperty("acquirer")
-  private UUID acquirer;
+public class ReceiverApiModel   {
+  @JsonProperty("userId")
+  private UUID userId;
 
   @JsonProperty("amount")
   private Integer amount;
 
-  public ReceivingApiModel acquirer(UUID acquirer) {
-    this.acquirer = acquirer;
+  public ReceiverApiModel userId(UUID userId) {
+    this.userId = userId;
     return this;
   }
 
   /**
-   * Get acquirer
-   * @return acquirer
+   * Get userId
+   * @return userId
   */
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public UUID getAcquirer() {
-    return acquirer;
+  public UUID getUserId() {
+    return userId;
   }
 
-  public void setAcquirer(UUID acquirer) {
-    this.acquirer = acquirer;
+  public void setUserId(UUID userId) {
+    this.userId = userId;
   }
 
-  public ReceivingApiModel amount(Integer amount) {
+  public ReceiverApiModel amount(Integer amount) {
     this.amount = amount;
     return this;
   }
@@ -71,22 +71,22 @@ public class ReceivingApiModel   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReceivingApiModel receiving = (ReceivingApiModel) o;
-    return Objects.equals(this.acquirer, receiving.acquirer) &&
-        Objects.equals(this.amount, receiving.amount);
+    ReceiverApiModel receiver = (ReceiverApiModel) o;
+    return Objects.equals(this.userId, receiver.userId) &&
+        Objects.equals(this.amount, receiver.amount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(acquirer, amount);
+    return Objects.hash(userId, amount);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ReceivingApiModel {\n");
+    sb.append("class ReceiverApiModel {\n");
     
-    sb.append("    acquirer: ").append(toIndentedString(acquirer)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
     sb.append("}");
     return sb.toString();

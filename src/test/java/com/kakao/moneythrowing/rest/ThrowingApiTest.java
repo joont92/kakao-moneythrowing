@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -109,7 +108,7 @@ public class ThrowingApiTest extends AcceptanceTest {
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -136,9 +135,11 @@ public class ThrowingApiTest extends AcceptanceTest {
 
     @Test
     public void 뿌린지_10분이_지났을_경우_받을_수_없다() throws Exception {
+        Instant now = Instant.now();
         RoomId roomId = RoomId.generate();
         Throwing throwing = new Throwing(UserId.generate(), roomId, 1000, 3,
-                Instant.now().minus(11, ChronoUnit.MINUTES), tokenGenerator);
+                now.minus(11, ChronoUnit.MINUTES), now.minus(1, ChronoUnit.MINUTES),
+                tokenGenerator);
         throwingRepository.save(throwing);
 
         mockMvc.perform(
@@ -147,5 +148,67 @@ public class ThrowingApiTest extends AcceptanceTest {
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 뿌리기_현재_상태를_조회한다() throws Exception {
+        UserId userId = UserId.generate();
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(userId, roomId, 1000, 3, tokenGenerator);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                get("/throwing/{token}", throwing.getToken().getValue())
+                        .accept("application/json")
+                        .header("X-USER-ID", userId.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amountStatus.completed").value(0))
+                .andExpect(jsonPath("$.amountStatus.remain").value(1000))
+                .andExpect(jsonPath("$.receivers").isEmpty());
+
+        throwing.acquire(UserId.generate(), roomId);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                get("/throwing/{token}", throwing.getToken().getValue())
+                        .accept("application/json")
+                        .header("X-USER-ID", userId.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.amountStatus.completed").value(Matchers.greaterThan(0)))
+                .andExpect(jsonPath("$.amountStatus.remain").value(Matchers.lessThan(1000)))
+                .andExpect(jsonPath("$.receivers").value(Matchers.hasSize(1)));
+    }
+
+    @Test
+    public void 자기_자신이_뿌린것만_조회할_수_있다() throws Exception {
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(UserId.generate(), roomId, 1000, 3, tokenGenerator);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                get("/throwing/{token}", throwing.getToken().getValue())
+                        .accept("application/json")
+                        .header("X-USER-ID", UserId.generate())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 일주일이_지난_뿌리기는_조회할_수_없다() throws Exception {
+        Instant endDate = Instant.now().minus(1, ChronoUnit.MINUTES);
+        UserId userId = UserId.generate();
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(UserId.generate(), roomId, 1000, 3,
+                endDate.minus(7, ChronoUnit.DAYS), endDate, tokenGenerator);
+        throwingRepository.save(throwing);
+
+        mockMvc.perform(
+                get("/throwing/{token}", throwing.getToken().getValue())
+                        .accept("application/json")
+                        .header("X-USER-ID", userId.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
+                .andExpect(status().isNotFound());
     }
 }

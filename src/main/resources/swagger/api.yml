@@ -105,19 +105,10 @@ components:
           $ref: '#/components/schemas/ThrowingTime'
         amountStatus:
           $ref: '#/components/schemas/ThrowingAmountStatus'
-        receivedUser:
+        receivers:
           type: array
           items:
-            $ref: '#/components/schemas/Receiving'
-    ThrowingAmountStatus:
-      type: object
-      properties:
-        total:
-          type: integer
-        completed:
-          type: integer
-        remain:
-          type: integer
+            $ref: '#/components/schemas/Receiver'
     ThrowingTime:
       type: object
       properties:
@@ -127,10 +118,19 @@ components:
         end:
           type: string
           format: date-time
-    Receiving:
+    ThrowingAmountStatus:
       type: object
       properties:
-        acquirer:
+        total:
+          type: integer
+        completed:
+          type: integer
+        remain:
+          type: integer
+    Receiver:
+      type: object
+      properties:
+        userId:
           type: string
           format: uuid
         amount:

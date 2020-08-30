@@ -6,6 +6,9 @@ import com.kakao.moneythrowing.domain.model.user.UserId;
 import com.kakao.moneythrowing.support.mock.MockTokenRepository;
 import org.junit.Test;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThrowingTest {
@@ -68,8 +71,20 @@ public class ThrowingTest {
     public void 뿌린_당사자는_획득할_수_없다() {
         UserId generator = UserId.generate();
         RoomId roomId = RoomId.generate();
+
         Throwing throwing = new Throwing(
                 generator, roomId, 1000, 3, tokenGenerator);
+        throwing.acquire(generator, roomId);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void 만료된_뿌리기는_획득할_수_없다() {
+        UserId generator = UserId.generate();
+        RoomId roomId = RoomId.generate();
+        Instant anHourAgo = Instant.now().minus(1, ChronoUnit.HOURS);
+
+        Throwing throwing = new Throwing(generator, roomId, 1000, 3,
+                anHourAgo, anHourAgo.plus(10, ChronoUnit.MINUTES), tokenGenerator);
         throwing.acquire(generator, roomId);
     }
 }

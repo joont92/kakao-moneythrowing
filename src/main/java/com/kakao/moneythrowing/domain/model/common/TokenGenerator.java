@@ -11,7 +11,7 @@ public class TokenGenerator {
     public Token generateUnusedToken(Class<?> entityClass) {
         Token token;
         do {
-            token = Token.generateToken();
+            token = Token.generate();
         } while (tokenRepository.checkTokenUsed(entityClass, token));
 
         return token;

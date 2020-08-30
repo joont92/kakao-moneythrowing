@@ -1,17 +1,17 @@
 package com.kakao.moneythrowing.application.throwing;
 
 import com.kakao.moneythrowing.application.throwing.command.CreateThrowingCommand;
+import com.kakao.moneythrowing.application.throwing.command.ThrowingCommand;
 import com.kakao.moneythrowing.application.throwing.command.UserAndRoomCommand;
 import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.throwing.Throwing;
 import com.kakao.moneythrowing.domain.model.throwing.ThrowingRepository;
-import com.kakao.moneythrowing.domain.model.throwing.ThrowingThread;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,10 +31,23 @@ public class ThrowingService {
 
     @Transactional
     public Integer receiveThrowing(UserAndRoomCommand userAndRoomCommand, Token token) {
-        Throwing throwing = throwingRepository.findByToken(token);
+        Throwing throwing = throwingRepository.findByToken(token)
+                .orElseThrow(EntityNotFoundException::new);
 
         return throwing.acquire(userAndRoomCommand.getUserId(), userAndRoomCommand.getRoomId())
-                .orElseThrow(EntityNotFoundException::new)
+                .orElseThrow(IllegalArgumentException::new)
                 .getAmount();
+    }
+
+    @Transactional(readOnly = true)
+    public ThrowingCommand getThrowing(UserAndRoomCommand userAndRoomCommand, Token token) {
+        Throwing throwing = throwingRepository.findByToken(token)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if(!throwing.getUserId().equals(userAndRoomCommand.getUserId())) {
+            throw new IllegalArgumentException();
+        }
+
+        return ThrowingCommand.toDto(throwing);
     }
 }

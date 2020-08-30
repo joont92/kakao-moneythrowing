@@ -29,21 +29,24 @@ public class Throwing extends Identified {
     @Embedded
     private RoomId roomId;
 
+    @Column(name = "start_date")
+    private Instant startDate;
+
     @Column(name = "end_date")
     private Instant endDate;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "throwing_pk")
     private Set<ThrowingThread> threads = new HashSet<>();
 
     public Throwing(UserId userId, RoomId roomId,
                     Integer moneyAmount, Integer peopleCount, TokenGenerator tokenGenerator) {
         this(userId, roomId, moneyAmount, peopleCount,
-                Instant.now().plus(10, ChronoUnit.MINUTES), tokenGenerator);
+                Instant.now(), Instant.now().plus(10, ChronoUnit.MINUTES), tokenGenerator);
     }
 
-    public Throwing(UserId userId, RoomId roomId,
-                    Integer moneyAmount, Integer peopleCount, Instant endDate, TokenGenerator tokenGenerator) {
+    public Throwing(UserId userId, RoomId roomId, Integer moneyAmount, Integer peopleCount,
+                    Instant startDate, Instant endDate, TokenGenerator tokenGenerator) {
         if(moneyAmount < peopleCount) {
             throw new IllegalArgumentException();
         }
@@ -51,6 +54,7 @@ public class Throwing extends Identified {
         this.token = tokenGenerator.generateUnusedToken(getClass());
         this.userId = userId;
         this.roomId = roomId;
+        this.startDate = startDate;
         this.endDate = endDate;
         divideAmountRandomly(moneyAmount, peopleCount);
     }
@@ -65,14 +69,6 @@ public class Throwing extends Identified {
             bound = bound - amount + 1;
         }
         this.threads.add(new ThrowingThread(bound + 1));
-    }
-
-    public Token getToken() {
-        return token;
-    }
-
-    public Set<ThrowingThread> getThreads() {
-        return threads;
     }
 
     public Optional<ThrowingThread> acquire(UserId userId, RoomId roomId) {
@@ -96,5 +92,29 @@ public class Throwing extends Identified {
         opt.ifPresent(t -> t.acquire(userId));
 
         return opt;
+    }
+
+    public Token getToken() {
+        return this.token;
+    }
+
+    public UserId getUserId() {
+        return this.userId;
+    }
+
+    public RoomId getRoomId() {
+        return this.roomId;
+    }
+
+    public Instant getStartDate() {
+        return this.startDate;
+    }
+
+    public Instant getEndDate() {
+        return this.endDate;
+    }
+
+    public Set<ThrowingThread> getThreads() {
+        return threads;
     }
 }

@@ -22,7 +22,7 @@ public class Token {
         this.token = token;
     }
 
-    public static Token generateToken() {
+    public static Token generate() {
         Random random = new Random();
         int leftLimit = 48; // '0'
         int rightLimit = 122; // 'z'
@@ -34,7 +34,7 @@ public class Token {
                 .collect(Collectors.joining()));
     }
 
-    public static Token createToken(String token) {
+    public static Token create(String token) {
         if(token.length() != TOKEN_LENGTH) {
             throw new IllegalArgumentException();
         }
