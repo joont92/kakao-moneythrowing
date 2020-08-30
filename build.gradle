@@ -39,6 +39,7 @@ sourceSets {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.1'

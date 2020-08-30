@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AcceptanceTest {
+public abstract class AcceptanceTest {
     @Autowired
     protected MockMvc mockMvc;
     @Autowired

@@ -1,16 +1,17 @@
 package com.kakao.moneythrowing.domain.model.throwing;
 
 import com.kakao.moneythrowing.domain.model.Identified;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "throwing_thread")
 public class ThrowingThread extends Identified {
     @Column(name = "amount")
     private Integer amount;
-
-    protected ThrowingThread() {}
 
     public ThrowingThread(Integer amount) {
         this.amount = amount;

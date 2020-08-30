@@ -1,14 +1,12 @@
 package com.kakao.moneythrowing.domain.model.common;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class TokenGenerator {
     private final TokenRepository tokenRepository;
-
-    public TokenGenerator(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }
 
     public Token generateUnusedToken(Class<?> entityClass) {
         Token token;

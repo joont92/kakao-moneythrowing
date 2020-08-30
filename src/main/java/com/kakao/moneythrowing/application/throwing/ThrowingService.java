@@ -5,20 +5,16 @@ import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.throwing.Throwing;
 import com.kakao.moneythrowing.domain.model.throwing.ThrowingRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class ThrowingService {
     private final TokenGenerator tokenGenerator;
-
     private final ThrowingRepository throwingRepository;
-
-    public ThrowingService(TokenGenerator tokenGenerator, ThrowingRepository throwingRepository) {
-        this.tokenGenerator = tokenGenerator;
-        this.throwingRepository = throwingRepository;
-    }
 
     @Transactional
     public Token createThrowing(CreateThrowingCommand command) {

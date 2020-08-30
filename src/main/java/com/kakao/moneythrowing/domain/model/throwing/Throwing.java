@@ -5,6 +5,8 @@ import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.user.UserId;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -13,6 +15,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "throwing")
 public class Throwing extends Identified {
@@ -31,8 +34,6 @@ public class Throwing extends Identified {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "throwing_pk")
     private Set<ThrowingThread> threads = new HashSet<>();
-
-    protected Throwing() {}
 
     public Throwing(UserId userId, RoomId roomId,
                     Integer moneyAmount, Integer peopleCount, TokenGenerator tokenGenerator) {

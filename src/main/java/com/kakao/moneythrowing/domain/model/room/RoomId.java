@@ -1,13 +1,17 @@
 package com.kakao.moneythrowing.domain.model.room;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Embeddable;
 import java.util.UUID;
 
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class RoomId {
     private UUID roomId;
-
-    protected RoomId() {}
 
     private RoomId(UUID roomId) {
         this.roomId = roomId;
@@ -19,19 +23,5 @@ public class RoomId {
 
     public static RoomId create(String roomId) {
         return new RoomId(UUID.fromString(roomId));
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-
-        if(obj == null || obj.getClass() != getClass()) {
-            return false;
-        }
-
-        RoomId userId = (RoomId) obj;
-        return roomId.equals(userId.roomId);
     }
 }
