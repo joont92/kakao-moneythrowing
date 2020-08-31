@@ -76,7 +76,7 @@ public interface ThrowingApi {
 
 
     /**
-     * PUT /throwing/{token}/receive : 뿌린 금액 받기
+     * PUT /throwing/{token}/threads : 뿌린 금액 받기
      *
      * @param X_USER_ID  (required)
      * @param X_ROOM_ID  (required)
@@ -86,7 +86,7 @@ public interface ThrowingApi {
     @ApiOperation(value = "뿌린 금액 받기", nickname = "receiveThrowing", notes = "", response = AmountApiModel.class, tags={ "Throwing", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK", response = AmountApiModel.class) })
-    @RequestMapping(value = "/throwing/{token}/receive",
+    @RequestMapping(value = "/throwing/{token}/threads",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
     default ResponseEntity<AmountApiModel> receiveThrowing(@ApiParam(value = "" ,required=true) @RequestHeader(value="X-USER-ID", required=true) UUID X_USER_ID,@ApiParam(value = "" ,required=true) @RequestHeader(value="X-ROOM-ID", required=true) UUID X_ROOM_ID,@ApiParam(value = "",required=true) @PathVariable("token") String token) {

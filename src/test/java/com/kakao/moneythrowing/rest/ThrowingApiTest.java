@@ -4,6 +4,7 @@ import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.room.RoomId;
 import com.kakao.moneythrowing.domain.model.throwing.Throwing;
 import com.kakao.moneythrowing.domain.model.throwing.ThrowingRepository;
+import com.kakao.moneythrowing.domain.model.throwing.ThrowingThread;
 import com.kakao.moneythrowing.domain.model.user.UserId;
 import com.kakao.moneythrowing.rest.model.CreateThrowingRequestApiModel;
 import com.kakao.moneythrowing.support.AcceptanceTest;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,7 +65,7 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
@@ -78,13 +82,13 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", RoomId.generate().getValue()))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken())
+                put("/throwing/{token}/threads", throwing.getToken())
                         .contentType("application/json")
                         .header("X-USER-ID", generator.getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
@@ -98,13 +102,13 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isOk());
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
@@ -120,13 +124,13 @@ public class ThrowingApiTest extends AcceptanceTest {
 
         UserId receiver = UserId.generate();
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", receiver.getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isOk());
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", receiver.getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
@@ -143,11 +147,51 @@ public class ThrowingApiTest extends AcceptanceTest {
         throwingRepository.save(throwing);
 
         mockMvc.perform(
-                put("/throwing/{token}/receive", throwing.getToken().getValue())
+                put("/throwing/{token}/threads", throwing.getToken().getValue())
                         .contentType("application/json")
                         .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void 동시요청으로_실패할_경우_다시_시도한다() {
+        RoomId roomId = RoomId.generate();
+        Throwing throwing = new Throwing(
+                UserId.generate(), roomId, 1000, 2, tokenGenerator);
+        throwingRepository.save(throwing);
+
+        class Request implements Runnable {
+            @Override
+            public void run() {
+                try {
+                    mockMvc.perform(
+                            put("/throwing/{token}/threads", throwing.getToken().getValue())
+                                    .contentType("application/json")
+                                    .header("X-USER-ID", UserId.generate().getValue())
+                                    .header("X-ROOM-ID", roomId.getValue()))
+                            .andExpect(status().isOk());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Thread thread1 = new Thread(new Request());
+        Thread thread2 = new Thread(new Request());
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertThat(throwingRepository.findByToken(throwing.getToken()).get()
+                .getThreads().stream().noneMatch(ThrowingThread::acquirable)).isTrue();
     }
 
     @Test

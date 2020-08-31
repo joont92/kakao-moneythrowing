@@ -8,8 +8,10 @@ import com.kakao.moneythrowing.application.throwing.command.UserAndRoomCommand;
 import com.kakao.moneythrowing.domain.model.common.Token;
 import com.kakao.moneythrowing.rest.model.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Controller;
 
 import java.time.ZoneOffset;
@@ -32,6 +34,7 @@ public class ThrowingApiDelegateImpl implements ThrowingApiDelegate {
         return new ResponseEntity<>(new TokenApiModel().token(token.getValue()), HttpStatus.CREATED);
     }
 
+    @Retryable(OptimisticLockingFailureException.class)
     @Override
     public ResponseEntity<AmountApiModel> receiveThrowing(UUID X_USER_ID, UUID X_ROOM_ID, String token) {
         Integer amount = throwingService.receiveThrowing(

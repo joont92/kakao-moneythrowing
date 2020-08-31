@@ -78,7 +78,7 @@ public interface ThrowingApiDelegate {
     }
 
     /**
-     * PUT /throwing/{token}/receive : 뿌린 금액 받기
+     * PUT /throwing/{token}/threads : 뿌린 금액 받기
      *
      * @param X_USER_ID  (required)
      * @param X_ROOM_ID  (required)

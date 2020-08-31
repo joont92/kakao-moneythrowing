@@ -7,7 +7,8 @@
 ### 뿌리기 받기
 - token 으로 throwing 을 찾고, 자식 throwing_thread 중 1건을 찾아 사용자에게 할당합니다
     - 할당한 사용자의 id 를 throwing_thread 에 기록합니다
-- JPA optimisitic lock 을 사용하여 동시에 같은 thread 를 잡았을 시 다시 위 로직을 다시 시도합니다
+- 동시요청 방어는 JPA optimisitic lock 을 사용하였습니다
+    - optimistic lock 발생시 retry 할 수 있게 하였습니다  
 
 ### 토큰 생성
 - 000 ~ zzz 사이 랜덤한 문자를 생성합니다

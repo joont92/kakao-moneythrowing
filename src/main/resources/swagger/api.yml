@@ -48,7 +48,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Throwing'
 
-  /throwing/{token}/receive:
+  /throwing/{token}/threads:
     put:
       summary: 뿌린 금액 받기
       operationId: receiveThrowing
