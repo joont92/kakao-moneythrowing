@@ -86,8 +86,8 @@ public class ThrowingApiTest extends AcceptanceTest {
         mockMvc.perform(
                 put("/throwing/{token}/receive", throwing.getToken())
                         .contentType("application/json")
-                        .header("X-USER-ID", generator)
-                        .header("X-ROOM-ID", roomId))
+                        .header("X-USER-ID", generator.getValue())
+                        .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -190,7 +190,7 @@ public class ThrowingApiTest extends AcceptanceTest {
         mockMvc.perform(
                 get("/throwing/{token}", throwing.getToken().getValue())
                         .accept("application/json")
-                        .header("X-USER-ID", UserId.generate())
+                        .header("X-USER-ID", UserId.generate().getValue())
                         .header("X-ROOM-ID", roomId.getValue()))
                 .andExpect(status().isBadRequest());
     }
