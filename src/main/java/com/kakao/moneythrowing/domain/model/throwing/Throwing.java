@@ -62,13 +62,13 @@ public class Throwing extends Identified {
     private void divideAmountRandomly(Integer moneyAmount, Integer peopleCount) {
         Random random = new Random();
 
-        int bound = moneyAmount - peopleCount;
+        int bound = moneyAmount - peopleCount + 1;
         for (int i = 0; i < peopleCount - 1; i++) {
             int amount = random.nextInt(bound) + 1;
             this.threads.add(new ThrowingThread(amount));
             bound = bound - amount + 1;
         }
-        this.threads.add(new ThrowingThread(bound + 1));
+        this.threads.add(new ThrowingThread(bound));
     }
 
     public Optional<ThrowingThread> acquire(UserId userId, RoomId roomId) {

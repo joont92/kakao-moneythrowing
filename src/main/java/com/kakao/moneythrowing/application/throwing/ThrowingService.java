@@ -8,6 +8,8 @@ import com.kakao.moneythrowing.domain.model.common.TokenGenerator;
 import com.kakao.moneythrowing.domain.model.throwing.Throwing;
 import com.kakao.moneythrowing.domain.model.throwing.ThrowingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class ThrowingService {
         return throwing.getToken();
     }
 
+    @Retryable(OptimisticLockingFailureException.class)
     @Transactional
     public Integer receiveThrowing(UserAndRoomCommand userAndRoomCommand, Token token) {
         Throwing throwing = throwingRepository.findByToken(token)
