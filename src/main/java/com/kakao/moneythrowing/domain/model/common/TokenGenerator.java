@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class TokenGenerator {
     private final TokenRepository tokenRepository;
 
+    // TODO 동시성 이슈 발생 가능
     public Token generateUnusedToken(Class<?> entityClass) {
         Token token;
         do {
